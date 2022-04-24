@@ -17,7 +17,7 @@ export default function Home() {
   const[allTransactions, setAllTransactions] = useState([])
   const [owner , setOwner] = useState("")
   const [fileUrl , setFileUrl] = useState(null)
-  const [time , setTime] = useState(null)
+  const [time , setTime] = useState("")
 
 
 
@@ -75,31 +75,43 @@ export default function Home() {
       );
       
       const amountInWei = ethers.utils.parseEther(tranferAmount);
-      console.log(amountInWei);
+ 
       console.log(owner);
       const tx1 = await Token.transfer(address, amountInWei);
-      // console.log(tx1);
-      const hashValue = tx1.hash;
-      setHash(hashValue);
-      // const url =`https://ropsten.etherscan.io/tx/${hash}`
-      // setFileUrl(url)
-      
-      // console.log(hash)
+ 
 
+
+      const _time = new Date().toLocaleString();
+      console.log(_time);
+
+      const hashValue = tx1.hash;
+      console.log(hashValue);
+   
+     
+     
+      console.log("time works");
+      setTime(_time);
+      setHash(hashValue);
       
+      console.log(time);
+      console.log(hash);
+
         if (message == ""){
           message ="No Message was sent"
         }
       
    
-      // const amountInWei = Math.round(parseFloat(tranferAmount) * (10 ** 18));
+     
       if(tx1) {
-        const tx2 = await Token.CreateTransactionList(address, message ,tranferAmount);
+        console.log("time works");
+       
+        console.log("the setting of all also works")
+        const tx2 = await Token.CreateTransactionList(address, message ,tranferAmount,time,hash);
+        console.log("time wjnorks");
         setLoading(true);
       // wait for the transaction to get mined
       await tx1.wait();
-      const _time = new Date().toLocaleString();
-        setTime(_time);
+      
       await tx2.wait();
       await FetchAllTransactions();
       setLoading(false);
@@ -134,7 +146,9 @@ export default function Home() {
         Sender : i.sender,
         Receiver : i.to,
         Value: i.value.toNumber(),
-        Message :i.message
+        Time : i.time,
+        Message :i.message,
+        Hash:i.hashText
        }
        return transactionsList
      }))
@@ -276,14 +290,14 @@ export default function Home() {
                           {transaction.Value}
                         </td>
                         <td className={styles.td}>
-                          {time}
+                          {transaction.Time}
                         </td>
                         <td className={styles.td}>
                           {transaction.Message}
                         </td>
                         <td className={styles.td}>
                          <button>
-                           <a href={`https://ropsten.etherscan.io/tx/${hash}`}  target="_blank" rel="noreferrer">
+                           <a href={`https://ropsten.etherscan.io/tx/${transaction.Hash}`}  target="_blank" rel="noreferrer">
                              View in Explorer
                            </a>
                          </button>
