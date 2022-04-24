@@ -212,10 +212,10 @@ export default function Home() {
                   ID
                 </th>
                 <th className={styles.th}>
-                  Sender's Address
+                  Senders Address
                 </th>
                 <th className={styles.th}>
-                  Receiver's Address
+                  Receivers Address
                 </th>
                 <th className={styles.th}>
                   Amount 
@@ -283,7 +283,7 @@ export default function Home() {
                         </td>
                         <td className={styles.td}>
                          <button>
-                           <a href={`https://ropsten.etherscan.io/tx/${hash}`}  target="_blank">
+                           <a href={`https://ropsten.etherscan.io/tx/${hash}`}  target="_blank" rel="noreferrer">
                              View in Explorer
                            </a>
                          </button>
