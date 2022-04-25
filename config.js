@@ -1,4 +1,4 @@
-export const OleanjiToken = "0x7BCA587CD943aAf3315A09796DE2899FC2f17eE6";
+export const OleanjiToken = "0x8c8aa76D9dF231E7f38ad5bb97598C31bcDa3769";
 export const abi = [
   {
     "inputs": [
@@ -84,9 +84,9 @@ export const abi = [
         "type": "string"
       },
       {
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "_hash",
-        "type": "string"
+        "type": "bytes32"
       }
     ],
     "name": "CreateTransactionList",
@@ -131,9 +131,9 @@ export const abi = [
             "type": "string"
           },
           {
-            "internalType": "string",
+            "internalType": "bytes32",
             "name": "hashText",
-            "type": "string"
+            "type": "bytes32"
           }
         ],
         "internalType": "struct OleanjiToken.Transaction[]",

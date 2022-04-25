@@ -16,7 +16,7 @@ contract OleanjiToken is ERC20("OleanjiToken" , "Oleanji") {
         uint256 value;
         string time;
         string message;
-        string hashText;
+        bytes32 hashText;
     }
     mapping(uint256 => Transaction ) private idTransaction;
     uint256 numofTransaction;
@@ -33,11 +33,12 @@ contract OleanjiToken is ERC20("OleanjiToken" , "Oleanji") {
 
 
 
-    function CreateTransactionList (address _to ,string memory _message,uint _value , string memory _time , string memory _hash) public {
+    function CreateTransactionList (address _to ,string memory _message,uint _value , string memory _time , bytes32  _hash) public {
         address _sender = msg.sender;
         require(_sender != _to ,"You can't be the same person as receiving and collecting");
         require(_value > 0 , "You can send 0 tokens to another person");
-        require(_time != "", "it is empty");
+        bytes memory b1 = bytes(_time);
+        require(b1.length != 0 , "it is empty");
         require(_hash != "", "it is empty");
         numofTransaction +=1;
         idTransaction[numofTransaction] = Transaction (

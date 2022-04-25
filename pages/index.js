@@ -79,32 +79,37 @@ export default function Home() {
       console.log(owner);
       const tx1 = await Token.transfer(address, amountInWei);
  
-
-
-      const _time = new Date().toLocaleString();
+        let _time =  new Date().toLocaleString();
       console.log(_time);
-
-      const hashValue = tx1.hash;
+      let hashValue = tx1.hash;
       console.log(hashValue);
+      
+
+     
    
      
      
       console.log("time works");
-      setTime(_time);
-      setHash(hashValue);
       
-      console.log(time);
-      console.log(hash);
 
-        if (message == ""){
-          message ="No Message was sent"
-        }
-      
-   
-     
+      if (message == ""){
+        message ="No Message was sent"
+      }
+    
+      if (hash != hashValue){
+        hash = hashValue;
+      }
+      if (time != _time){
+        time = _time;
+      }
+
+
       if(tx1) {
         console.log("time works");
-       
+        
+        
+        console.log(time);
+        console.log(hash);
         console.log("the setting of all also works")
         const tx2 = await Token.CreateTransactionList(address, message ,tranferAmount,time,hash);
         console.log("time wjnorks");
@@ -175,7 +180,7 @@ export default function Home() {
   }, [walletConnected]);
 
   const renderButton = () => {
-    if(walletConnected) {
+    if(walletConnected && allTransactions.length != 0) {
       return (
         <div>
 
@@ -310,6 +315,46 @@ export default function Home() {
          </div>
       </div>
     
+      )
+    }
+    else if(walletConnected) {
+      return (
+        <div>
+
+        
+        <div className={styles.card}>
+        <input
+        style={{padding:"10px", marginTop :"10px",  borderRadius: "25px"}}
+          type= "text"
+          placeholder=" Receiver's Address"
+          onChange={e => setAddress(e.target.value) 
+          }
+         />
+         <br />
+         <input
+           style={{padding:"10px", marginTop :"10px",  borderRadius: "25px"}}
+          placeholder="Amount"
+          onChange={e => setTransferAmount(e.target.value) }
+          />
+
+          <textarea
+          style={{padding:"10px", marginTop :"10px"}}
+          placeholder="Message should not be more than 20 characters."
+          rows="4" cols="25"
+          onChange={e => setMessage(e.target.value) }
+          />
+
+          <div>
+          <button 
+           style={{padding:"5px", margin :"10px", width:"150px"}}
+          onClick={transferTokens}>
+            <p>
+              SEND
+            </p>
+          </button>
+          </div>
+          </div>
+        </div>
       )
     }
     else {
