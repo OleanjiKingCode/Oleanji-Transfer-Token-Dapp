@@ -1,9 +1,12 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Web3Modal from "web3modal";
+
 import { providers, Contract, ethers } from "ethers";
 import { useEffect, useRef, useState } from "react";
-import { OleanjiToken, abi } from "../config";
+import { OleanjiToken} from "../constant";
+import Oleanji from "../artifacts/contracts/OleanjiToken.sol/OleanjiToken.json"
+// import { TOKENARY } from "web3modal/dist/providers/injected";
 
 
 export default function Home() {
@@ -70,10 +73,24 @@ export default function Home() {
       // update methods
       const Token = new Contract(
         OleanjiToken,
-        abi,
+        Oleanji.abi,
         signer
       );
+
       
+
+      const IsValid = ethers.utils.isAddress(address)
+      
+      if(address =="" || !IsValid) {
+        window.alert("The Address Section should have a valid address in it.");
+      }
+      if(tranferAmount == "" || tranferAmount>=80) {
+        window.alert("Enter a valid amount in the Amount Section which is also less than 80");
+
+      }
+     
+      
+
       const amountInWei = ethers.utils.parseEther(tranferAmount);
  
       console.log(owner);
@@ -83,15 +100,7 @@ export default function Home() {
       console.log(_time);
       let hashValue = tx1.hash;
       console.log(hashValue);
-      
-
-     
-   
-     
-     
       console.log("time works");
-      
-
       if (message == ""){
         message ="No Message was sent"
       }
@@ -129,7 +138,29 @@ export default function Home() {
     }
   }
 
-
+  const Mint = async () => {
+    try {
+      
+      const signer = await getProviderOrSigner(true);
+      const Token = new Contract(
+      OleanjiToken,
+      Oleanji.abi,
+      signer
+    );
+    const checker = await Token.checkIfMinted()
+    if(!checker){
+      const mintNewOleanji = await Token.mintByAnyone();
+      await mintNewOleanji.wait();
+    }
+    else{
+      window.alert("You have already minted 100 Oleanji");
+    }
+   
+    } catch (er) {
+      console.log(er)
+    }
+    
+  }
 
   const FetchAllTransactions = async () => {
     try {
@@ -138,7 +169,7 @@ export default function Home() {
       // update methods
       const Token = new Contract(
         OleanjiToken,
-        abi,
+        Oleanji.abi,
         signer
       );
 
@@ -180,14 +211,14 @@ export default function Home() {
   }, [walletConnected]);
 
   const renderButton = () => {
-    if(walletConnected && allTransactions.length != 0) {
+    if(walletConnected && allTransactions.length == 0 ) {
       return (
-        <div>
+       
 
-        
+        <div style={{display:"flex", justifyContent:"space-around"}}>
         <div className={styles.card}>
         <input
-        style={{padding:"10px", marginTop :"10px",  borderRadius: "25px"}}
+        style={{padding:"10px", marginTop :"10px"}}
           type= "text"
           placeholder=" Receiver's Address"
           onChange={e => setAddress(e.target.value) 
@@ -195,13 +226,13 @@ export default function Home() {
          />
          <br />
          <input
-           style={{padding:"10px", marginTop :"10px",  borderRadius: "25px"}}
+           style={{padding:"10px", marginTop :"10px"}}
           placeholder="Amount"
           onChange={e => setTransferAmount(e.target.value) }
           />
 
           <textarea
-          style={{padding:"10px", marginTop :"10px"}}
+          style={{padding:"10px", marginTop :"20px"}}
           placeholder="Message should not be more than 20 characters."
           rows="4" cols="25"
           onChange={e => setMessage(e.target.value) }
@@ -209,7 +240,8 @@ export default function Home() {
 
           <div>
           <button 
-           style={{padding:"5px", margin :"10px", width:"150px"}}
+         className={styles.button}
+         style={{margin:"50px 0 0 0", padding:"10px 50px" , border:"2px solid black"}}
           onClick={transferTokens}>
             <p>
               SEND
@@ -217,12 +249,85 @@ export default function Home() {
           </button>
           </div>
           </div>
+          <div className={styles.card}>
+            <p>
+              You can only Mint Tokens Once.
+            </p>
+            <div>
+              <button onClick={Mint} className={styles.button} style={{margin:"50px", padding:"10px" , border:"2px solid black"}}>
+                Mint Oleanji
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    else if(walletConnected && allTransactions.length > 0) {
+      return (
+        <div>
+
+        <div style={{display:"flex", justifyContent:"space-around"}}>
+
+        
+        <div className={styles.card}>
+        <input
+        style={{padding:"10px", marginTop :"10px"}}
+          type= "text"
+          placeholder=" Receiver's Address"
+          onChange={e => setAddress(e.target.value) 
+          }
+         />
+         <br />
+         <input
+           style={{padding:"10px", marginTop :"10px"}}
+          placeholder="Amount"
+          onChange={e => setTransferAmount(e.target.value) }
+          />
+
+          <textarea
+          style={{padding:"10px", marginTop :"20px"}}
+          placeholder="Message should not be more than 20 characters."
+          rows="4" cols="25"
+          onChange={e => setMessage(e.target.value) }
+          />
+
+          <div>
+          <button 
+            className={styles.button}
+            style={{margin:"50px 0 0 0", padding:"10px 50px" , border:"2px solid black"}}
+          onClick={transferTokens}>
+            <p>
+              SEND
+            </p>
+          </button>
+          </div>
+
+          </div>
+          <div className={styles.card}>
+            <p>
+              You can only Mint Tokens Once.
+            </p>
+            <div>
+              <button onClick={Mint} className={styles.button} style={{margin:"50px", padding:"10px" , border:"2px solid black"}}>
+                Mint Oleanji
+              </button>
+            </div>
+          </div>
+          </div>
          <br/>
          <br/>
          <br/>
 
-         <div>
+
+            <h2 className={styles.title} style={{marginBottom:"20px"}}>
+             Transactions Record
+           </h2>
+         <div> 
+           
             <table className={styles.table}>
+              <tbody>
+
+             
               <tr className={styles.tr}>
               <th className={styles.th}>
                   No
@@ -253,113 +358,73 @@ export default function Home() {
               {
 
                 allTransactions.map((transaction , i ) => {
-                    return (
-                      (transaction.Sender == owner || transaction.Receiver == owner) && 
+               
+                  return (
+                    (transaction.Sender == owner || transaction.Receiver == owner) && 
 
-                      <tr key={i} className={styles.tr}>
-                        <td className={styles.td}>
-                          {serial++}
-                        </td>
-                        <td className={styles.td}>
-                          {transaction.Index}
-                        </td>
-                        <td className={styles.td}>
-                        {transaction.Sender == owner ? (
-                            <p>You</p>
-                          ) : (
-                           <p> {transaction.Sender}</p> 
-                          )
-                          }
-                          
-                        </td>
-                        <td className={styles.td}>
-                          {/* <ConditionalWrapper condition={transaction.Receiver == owner} >
-
-                          </ConditionalWrapper> */}
-
-                          {/* {transaction.Receiver == owner &&
-                            <p>You</p>
-                          } */}
-
-                          {/* This is a tenary  block 
-                              where we check if the receiver is the owner or not 
-                          */}
-                          {transaction.Receiver == owner ? (
-                            <p>You</p>
-                          ) : (
-                           <p> {transaction.Receiver}</p> 
-                          )
-                          }
-                        </td>
-                        <td className={styles.td}>
-                          {transaction.Value}
-                        </td>
-                        <td className={styles.td}>
-                          {transaction.Time}
-                        </td>
-                        <td className={styles.td}>
-                          {transaction.Message}
-                        </td>
-                        <td className={styles.td}>
-                         <button>
-                           <a href={`https://ropsten.etherscan.io/tx/${transaction.Hash}`}  target="_blank" rel="noreferrer">
-                             View in Explorer
-                           </a>
-                         </button>
-                        </td>
-                      </tr> 
-                    )
-                })
+                     <tr key={i} className={styles.tr}>
+                       <td className={styles.td}>
+                         {serial++}
+                       </td>
+                       <td className={styles.td}>
+                         {transaction.Index}
+                       </td>
+                       <td className={styles.td}>
+                       {transaction.Sender == owner ? (
+                           <p>You</p>
+                         ) : (
+                          <p> {transaction.Sender}</p> 
+                         )
+                         }
+                         
+                       </td>
+                       <td className={styles.td}>
+                         
+                         {transaction.Receiver == owner ? (
+                           <p>You</p>
+                         ) : (
+                          <p> {transaction.Receiver}</p> 
+                         )
+                         }
+                       </td>
+                       <td className={styles.td}>
+                         {transaction.Value}
+                       </td>
+                       <td className={styles.td}>
+                         {transaction.Time}
+                       </td>
+                       <td className={styles.td}>
+                         {transaction.Message}
+                       </td>
+                       <td className={styles.td}>
+                        <button>
+                          <a href={`https://ropsten.etherscan.io/tx/${transaction.Hash}`}  target="_blank" rel="noreferrer">
+                            View in Explorer
+                          </a>
+                        </button>
+                       </td>
+                     </tr> 
+                   )
+                }
+                
+                    
+                )
               }
+               </tbody>
             </table>
          </div>
       </div>
     
       )
     }
-    else if(walletConnected) {
-      return (
-        <div>
-
-        
-        <div className={styles.card}>
-        <input
-        style={{padding:"10px", marginTop :"10px",  borderRadius: "25px"}}
-          type= "text"
-          placeholder=" Receiver's Address"
-          onChange={e => setAddress(e.target.value) 
-          }
-         />
-         <br />
-         <input
-           style={{padding:"10px", marginTop :"10px",  borderRadius: "25px"}}
-          placeholder="Amount"
-          onChange={e => setTransferAmount(e.target.value) }
-          />
-
-          <textarea
-          style={{padding:"10px", marginTop :"10px"}}
-          placeholder="Message should not be more than 20 characters."
-          rows="4" cols="25"
-          onChange={e => setMessage(e.target.value) }
-          />
-
-          <div>
-          <button 
-           style={{padding:"5px", margin :"10px", width:"150px"}}
-          onClick={transferTokens}>
-            <p>
-              SEND
-            </p>
-          </button>
-          </div>
-          </div>
-        </div>
-      )
+    else if(loading) {
+      <button>
+        ....Loading.....
+      </button>
     }
     else {
       return(
-        <button onClick={connectWallet} className={styles.button}>
+        <button onClick={connectWallet} className= {styles.button} style={{margin:"50px", padding:"10px" , border:"2px solid black"}}>
         Connect your wallet
       </button>
       )
@@ -374,7 +439,11 @@ export default function Home() {
        
       </Head>
       <div className={styles.main}>
-      <h1 className={styles.title}>You can transfer token in here</h1>
+      <h1 className={styles.title}>You can transfer Oleanji Token in here</h1> <br/>
+      
+      <h2>
+        Contract Address : {OleanjiToken}
+      </h2>
       
       <div>
         {renderButton()}

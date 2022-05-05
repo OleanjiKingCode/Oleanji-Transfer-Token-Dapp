@@ -1,5 +1,6 @@
 
 const hre = require("hardhat");
+const filesys = require("fs");
 
 async function main() {
  
@@ -10,6 +11,11 @@ async function main() {
   await token.deployed();
 
   console.log("OleanjiToken deployed to:", token.address);
+  filesys.writeFileSync('./constant.js' , `
+  export const OleanjiToken ="${token.address}"
+  
+  `)
+
 }
 
 main()

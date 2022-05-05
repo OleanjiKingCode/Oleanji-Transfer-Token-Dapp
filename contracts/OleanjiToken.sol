@@ -19,6 +19,7 @@ contract OleanjiToken is ERC20("OleanjiToken" , "Oleanji") {
         bytes32 hashText;
     }
     mapping(uint256 => Transaction ) private idTransaction;
+    mapping (address => bool) public alreadyMinted;
     uint256 numofTransaction;
 
 
@@ -65,6 +66,17 @@ contract OleanjiToken is ERC20("OleanjiToken" , "Oleanji") {
         }
         return transaction;
 
+    }
+
+        function checkIfMinted() public view returns(bool) {
+            bool checked =  alreadyMinted[msg.sender];
+            return checked;
+        }
+        function mintByAnyone() public  {
+        require(alreadyMinted[msg.sender] == false, "You have already gotten free tokens");
+        uint amountForAnyone = 100 *10 ** 18;
+        _mint(msg.sender,amountForAnyone);
+        alreadyMinted[msg.sender] = true;
     }
  
 }
