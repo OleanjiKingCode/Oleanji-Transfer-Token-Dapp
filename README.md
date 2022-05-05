@@ -5,6 +5,8 @@ After a successful transaction record is kept and shown you can view the transac
 
 the UI for this project is way under top notch but it serves it purpose well. It can be said to be a mini Trust wallet for Oleanji tokens. :)
 
+The Contract Address of Oleanji Token is provided in the page copy and paste that in your metamask account (ropsten)
+
 
 To add ropsten to your metamask :
 1. Open MetaMask extension and click on the dropdown icon of the network name. I see a list of Ether networks.
@@ -25,4 +27,4 @@ Requirements:
 
                                                                             ------ Adebayo Olamilekan     
                                                                                      Oleanji 
-```
+
