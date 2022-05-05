@@ -4,9 +4,9 @@ import Web3Modal from "web3modal";
 
 import { providers, Contract, ethers } from "ethers";
 import { useEffect, useRef, useState } from "react";
-import { OleanjiToken} from "../constant";
-import Oleanji from "../artifacts/contracts/OleanjiToken.sol/OleanjiToken.json"
-// import { TOKENARY } from "web3modal/dist/providers/injected";
+import { OleanjiToken,abi} from "../constant";
+// import Oleanji from "../artifacts/contracts/OleanjiToken.sol/OleanjiToken.json"
+
 
 
 export default function Home() {
@@ -73,7 +73,7 @@ export default function Home() {
       // update methods
       const Token = new Contract(
         OleanjiToken,
-        Oleanji.abi,
+        abi,
         signer
       );
 
@@ -144,7 +144,7 @@ export default function Home() {
       const signer = await getProviderOrSigner(true);
       const Token = new Contract(
       OleanjiToken,
-      Oleanji.abi,
+      abi,
       signer
     );
     const checker = await Token.checkIfMinted()
@@ -169,7 +169,7 @@ export default function Home() {
       // update methods
       const Token = new Contract(
         OleanjiToken,
-        Oleanji.abi,
+        abi,
         signer
       );
 
